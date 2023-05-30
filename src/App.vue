@@ -1,8 +1,9 @@
 <script>
-import GetGeoLocation from "./components/GetGeoLocation.vue";
-import GetGeoCodingSearch from "./components/GetGeoCodingSearch.vue";
-import GetLocationTimezone from "./components/GetLocationTimezone.vue";
+import GeoLocation from "./components/GeoLocation.vue";
+import GeoCodingSearch from "./components/GeoCodingSearch.vue";
+import GeoLocationTimezone from "./components/GeoLocationTimezone.vue";
 import LocationTable from "./components/LocationTable.vue";
+import Footer from "./components/common/Footer.vue";
 
 const saveDataToLocalStorage = (markers, savedLocations) => {
   localStorage.setItem("markers", JSON.stringify(markers));
@@ -16,13 +17,15 @@ export default {
       center: { lat: 49.2827291, lng: -123.1207375 },
       markers: [],
       savedLocations: [],
+      noresult: false,
     };
   },
   components: {
-    GetGeoLocation,
-    GetGeoCodingSearch,
+    GeoLocation,
+    GeoCodingSearch,
+    GeoLocationTimezone,
     LocationTable,
-    GetLocationTimezone,
+    Footer,
   },
   computed: {
     latitude() {
@@ -70,6 +73,9 @@ export default {
       // Save data to localStorage
       saveDataToLocalStorage(this.markers, this.savedLocations);
     },
+    noRearchResult(result) {
+      this.noresult = result;
+    },
   },
   created() {
     // Retrieve data from localStorage when the component is created
@@ -87,11 +93,12 @@ export default {
 </script>
 
 <template>
-  <div class="flex flex-col items-center justify-center">
-    <GetGeoLocation @location-updated="updateLocation" />
+  <div>
+<div class="flex flex-col items-center justify-center">
+    <GeoLocation @location-updated="updateLocation" />
     <div class="flex w-[85%] h-48 items-center justify-center gap-x-5 mb-5">
-      <GetGeoCodingSearch @location-selected="updateLocation" />
-      <GetLocationTimezone :latitude="center.lat" :longitude="center.lng" />
+      <GeoCodingSearch @location-selected="updateLocation" @no-result="noRearchResult" :latitude="center.lat" :longitude="center.lng"/>
+      <GeoLocationTimezone :latitude="center.lat" :longitude="center.lng" :noresult="noresult"/>
     </div>
     <GMapMap
       :key="center.lat"
@@ -110,6 +117,8 @@ export default {
       :locations="savedLocations"
       @delete-records="handleDeleteRecords"
     />
+  </div>
+  <Footer />
   </div>
 </template>
 

@@ -1,5 +1,5 @@
 <template>
-  <nav v-if="totalPages > 1">
+  <nav>
     <ul class="pagination">
       <li>
         <button @click="changePage(1)" :disabled="currentPage === 1">First</button>
@@ -53,14 +53,24 @@ export default {
 }
 
 .pagination button {
-  background: none;
+  background: #e2e8f0;
+  color: #2d3748;
   border: none;
+  border-radius: 0.25rem;
   cursor: pointer;
   font-size: larger;
   padding: 0.25rem 0.5rem;
 }
 
+.pagination button:hover {
+  background-color: #cbd5e0;
+}
+
 .pagination button.active {
   font-weight: bold;
+}
+
+.pagination button:disabled {
+  cursor: not-allowed;
 }
 </style>

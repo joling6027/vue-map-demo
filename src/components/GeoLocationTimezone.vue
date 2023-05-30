@@ -1,26 +1,36 @@
 <template>
   <div class="flex gap-x-5">
-    <div v-if="timeZone" class="pr-3 border-r-2">
+    <div v-if="timeZone && !noresult" class="pr-3 border-r-2">
       <h3 class="font-bold">TIMEZONE</h3>
-      <p>Time Zone ID: {{ timeZone.timeZoneId }}</p>
-      <p>Time Zone Name: {{ timeZone.timeZoneName }}</p>
+      <p>{{ timeZone.timeZoneId }}</p>
+      <p>{{ timeZone.timeZoneName }}</p>
       <!-- <p>Raw Offset: {{ timeZone.rawOffset }}</p> -->
     </div>
-    <div v-if="localTime">
+    <div v-if="noresult" class="pr-3 border-r-2">
+      <h3 class="font-bold">TIMEZONE</h3>
+      <p>-----</p>
+    </div>
+    <div v-if="localTime && !noresult">
       <h3 class="font-bold">LOCAL TIME</h3>
-      <p>{{ localTime }}</p>
+      <p>{{ formatDateTime(localTime) }}</p>
+    </div>
+    <div v-if="noresult">
+      <h3 class="font-bold">LOCAL TIME</h3>
+      <p>-----</p>
     </div>
     <div v-if="error">
-      <p>Error: {{ error }}</p>
+      <p class="text-red-700">Error: {{ error }}</p>
     </div>
   </div>
 </template>
 
 <script>
+import moment from 'moment';
 export default {
   props: {
     latitude: Number,
     longitude: Number,
+    noresult: Boolean,
   },
   data() {
     return {
@@ -79,10 +89,9 @@ export default {
             `https://worldtimeapi.org/api/timezone/${this.timeZone.timeZoneId}`
           );
           const data = await response.json();
-          console.log(data)
+          // console.log(data)
           if (data && data.datetime) {
             this.localTime = data.datetime;
-            console.log(data.datetime);
           } else {
             this.localTime = null;
           }
@@ -95,8 +104,7 @@ export default {
       }
     },
     formatDateTime(datetime) {
-      const formattedDateTime = moment(datetime).format('YYYY-MM-DD HH:mm:ss');
-      return formattedDateTime;
+      return moment.parseZone(datetime).utc(true).format("dddd, MMMM Do YYYY, h:mm:ss a");
     },
   },
 };

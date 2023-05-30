@@ -7,13 +7,12 @@
         @keydown.enter="searchLocation"
         placeholder="Enter a location"
         class="bg-gray-200 hover:bg-white border p-2 rounded-s-lg"
-        ref="autocompleteInput"
       />
       <button
         class="bg-cyan-500 hover:bg-cyan-700 text-white font-bold py-2 px-4 p-2 rounded-r-lg"
         @click="searchLocation"
       >
-      <IconSearch />
+        <IconSearch />
       </button>
     </div>
     <div v-if="searchResults.length" class="flex gap-x-5 border-r-2 pr-3">
@@ -31,7 +30,7 @@
         </p>
       </div>
     </div>
-    <div v-if="showNoResultsMessage">
+    <div v-if="showNoResultsMessage" class="border-r-2 pr-3">
       <h3 class="font-bold">LAST SEARCH</h3>
       <p>No search results found.</p>
     </div>
@@ -39,10 +38,14 @@
 </template>
 
 <script>
-import IconSearch from './common/icons/IconSearch.vue';
+import IconSearch from "./common/icons/IconSearch.vue";
 export default {
   components: {
-    IconSearch
+    IconSearch,
+  },
+  props: {
+    latitude: Number,
+    longitude: Number,
   },
   data() {
     return {
@@ -53,39 +56,42 @@ export default {
       autocomplete: null,
     };
   },
-  mounted() {
-    const script = document.createElement("script");
-    script.src = `https://maps.googleapis.com/maps/api/js?key=${import.meta.env.VITE_GOOGLE_MAP_API_KEY}&libraries=places`;
-    script.async = true;
-    script.defer = true;
-    script.onload = this.initializeGoogleMaps;
-    document.head.appendChild(script);
-  },
+  // mounted() {
+  //   const script = document.createElement("script");
+  //   script.src = `https://maps.googleapis.com/maps/api/js?key=${import.meta.env.VITE_GOOGLE_MAP_API_KEY}&libraries=places`;
+  //   script.async = true;
+  //   script.defer = true;
+  //   script.onload = this.initializeGoogleMaps;
+  //   document.head.appendChild(script);
+  // },
   methods: {
-    initializeGoogleMaps() {
-      // Initialize the Autocomplete service
-      const autocompleteService = new google.maps.places.AutocompleteService();
+    // initializeGoogleMaps() {
+    //   // Initialize the Autocomplete service
+    //   const autocompleteService = new google.maps.places.AutocompleteService();
 
-      // Initialize the Autocomplete input element
-      const autocompleteInput = document.getElementById("autocomplete-input");
-      const autocomplete = new google.maps.places.Autocomplete(autocompleteInput);
+    //   // Initialize the Autocomplete input element
+    //   const autocompleteInput = document.getElementById("autocomplete-input");
+    //   const autocomplete = new google.maps.places.Autocomplete(autocompleteInput);
 
-      // Listen for place selection event
-      autocomplete.addListener("place_changed", () => {
-        // Get the selected place from the Autocomplete input
-        const place = autocomplete.getPlace();
+    //   // Listen for place selection event
+    //   autocomplete.addListener("place_changed", () => {
+    //     // Get the selected place from the Autocomplete input
+    //     const place = autocomplete.getPlace();
 
-        // Process the selected place data
-        if (place.geometry && place.geometry.location) {
-          const latitude = place.geometry.location.lat();
-          const longitude = place.geometry.location.lng();
+    //     // Process the selected place data
+    //     if (place.geometry && place.geometry.location) {
+    //       const latitude = place.geometry.location.lat();
+    //       const longitude = place.geometry.location.lng();
 
-          // Do something with the latitude and longitude values
-          console.log("Selected Location:", latitude, longitude);
-        }
-      });
-    },
+    //       // Do something with the latitude and longitude values
+    //       console.log("Selected Location:", latitude, longitude);
+    //     }
+    //   });
+    // },
     async searchLocation() {
+      // if (this.latitude && this.longitude) {
+      //   this.searchQuery = `${this.latitude},${this.longitude}`;
+      // }
       if (this.searchQuery.trim() === "") {
         return;
       }
@@ -99,17 +105,19 @@ export default {
         const data = await response.json();
 
         if (data.status === "OK") {
-          this.searchResults = data.results;
+          this.searchResults = [data.results[0]];;
           this.location = {
             address: this.searchResults[0].formatted_address,
             latitude: this.searchResults[0].geometry.location.lat,
             longitude: this.searchResults[0].geometry.location.lng,
           };
           this.$emit("location-selected", this.location);
+          this.$emit("no-result", false);
           this.searchQuery = "";
           this.showNoResultsMessage = false;
         } else {
           this.searchResults = [];
+          this.$emit("no-result", true);
           this.searchQuery = "";
           this.showNoResultsMessage = true;
         }

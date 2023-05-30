@@ -1,11 +1,25 @@
 <template>
-  <h2 class="font-bold text-xl mb-5">SEARCH HISTORY</h2>
-  <form @submit.prevent="" class="w-[80%]">
-    
+  <h2 class="font-bold text-xl my-6">SEARCH HISTORY</h2>
+  <form @submit.prevent="" class="w-[80%] pb-24">
     <table>
       <thead>
         <tr>
-          <th><button class="bg-rose-500 hover:bg-rose-700 text-white font-bold py-2 px-4 rounded-xl" @click="deleteSelected" type="submit">Delete</button></th>
+          <th class="flex gap-x-2 justify-center">
+            <button
+              class="bg-rose-500 hover:bg-rose-700 text-white font-bold py-2 px-4 rounded-xl"
+              @click="deleteSelected"
+              type="submit"
+            >
+              <IconDelete />
+            </button>
+            <button
+              class="bg-cyan-500 hover:bg-cyan-700 text-white font-bold py-2 px-4 rounded-xl"
+              @click="selectAll"
+              type="button"
+            >
+              All
+            </button>
+          </th>
           <th>PLACE NAME</th>
           <th>LATITUDE</th>
           <th>LONGITUDE</th>
@@ -13,7 +27,13 @@
       </thead>
       <tbody>
         <tr v-for="(location, index) in paginatedLocations" :key="index">
-          <td><input class="checkbox" type="checkbox" v-model="location.selected"/></td>
+          <td>
+            <input
+              class="checkbox"
+              type="checkbox"
+              v-model="location.selected"
+            />
+          </td>
           <td>{{ location.address }}</td>
           <td>{{ location.latitude }}</td>
           <td>{{ location.longitude }}</td>
@@ -29,16 +49,25 @@
 </template>
 
 <script>
-import Pagination from './common/Pagination.vue';
+import Pagination from "./common/Pagination.vue";
+import IconDelete from "./common/icons/IconDelete.vue";
 export default {
   components: {
     Pagination,
+    IconDelete,
   },
-  emits: ['delete-records'],
+  emits: ["delete-records"],
   props: {
     locations: {
       type: Array,
       required: true,
+    },
+  },
+  watch: {
+    currentPage(newPage, oldPage) {
+      if (newPage !== oldPage && newPage > this.totalPages) {
+        this.changePage(newPage - 1);
+      }
     },
   },
   data() {
@@ -52,23 +81,35 @@ export default {
       return Math.ceil(this.locations.length / this.pageSize);
     },
     paginatedLocations() {
+      const reversedLocations = [...this.locations].reverse();
       const startIndex = (this.currentPage - 1) * this.pageSize;
       const endIndex = startIndex + this.pageSize;
-      return this.locations.slice(startIndex, endIndex);
-    }
+      return reversedLocations.slice(startIndex, endIndex);
+    },
+    // areAllSelected() {
+    //   return this.paginatedLocations.every((location) => location.selected);
+    // },
   },
   methods: {
     deleteSelected() {
-      console.log(this.locations);
-      const selectedLocations = this.locations.filter((location) => location.selected);
+      const selectedLocations = this.locations.filter(
+        (location) => location.selected
+      );
       this.$emit("delete-records", selectedLocations);
     },
     changePage(page) {
       if (page >= 1 && page <= this.totalPages) {
         this.currentPage = page;
       }
-    }
-  }
+    },
+    selectAll() {
+      const startIndex = (this.currentPage - 1) * this.pageSize;
+      const endIndex = startIndex + this.pageSize;
+      for (let i = startIndex; i < endIndex; i++) {
+        this.paginatedLocations[i].selected = true;
+      }
+    },
+  },
 };
 </script>
 
