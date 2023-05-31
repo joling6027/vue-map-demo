@@ -5,7 +5,6 @@ import vue from '@vitejs/plugin-vue'
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  base: '/vue-map-demo/',
   plugins: [vue()],
   resolve: {
     alias: {
@@ -15,6 +14,9 @@ export default defineConfig({
   build: {
     rollupOptions: {
       external: ['vuetify/lib'], // Mark 'vuetify/lib' as external
+    },
+    define: {
+      'process.env.VITE_APP_GOOGLE_API_KEY': JSON.stringify(process.env.VITE_APP_GOOGLE_API_KEY),
     },
   },
 })
