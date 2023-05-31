@@ -14,7 +14,8 @@ export default {
   name: "App",
   data() {
     return {
-      center: { lat: 49.2827291, lng: -123.1207375 },
+      // default map center to Toronto
+      center: { lat: 43.653226, lng: -79.3831843 }, 
       markers: [],
       savedLocations: [],
       noresult: false,
@@ -37,6 +38,7 @@ export default {
     },
   },
   methods: {
+    // update location info after performing search
     updateLocation(location) {
       this.center.lat = location.latitude;
       this.center.lng = location.longitude;
@@ -53,16 +55,15 @@ export default {
       //push the newMarker ID into the location object
       location.markerID = newMarker.id;
 
-      // change the no result boolean
+      // when search has no result, it passes true. Otherwise, it pass false
       this.noresult = false;
       location.noresult = this.noresult;
 
-      //save locations to display in the table
       this.savedLocations.push(location);
-
-      // Save data to localStorage
+      // save data to localStorage
       saveDataToLocalStorage(this.markers, this.savedLocations);
     },
+    //update current location latitude and longitude when clicking on "Get Current Location"
     updateCurrentLocation(location) {
       this.currentLocationId = location.currentLocationId
       this.center.lat = location.latitude;
@@ -143,32 +144,3 @@ export default {
     <Footer />
   </div>
 </template>
-
-<style scoped>
-header {
-  line-height: 1.5;
-}
-
-.logo {
-  display: block;
-  margin: 0 auto 2rem;
-}
-
-@media (min-width: 1024px) {
-  header {
-    display: flex;
-    place-items: center;
-    padding-right: calc(var(--section-gap) / 2);
-  }
-
-  .logo {
-    margin: 0 2rem 0 0;
-  }
-
-  header .wrapper {
-    display: flex;
-    place-items: flex-start;
-    flex-wrap: wrap;
-  }
-}
-</style>

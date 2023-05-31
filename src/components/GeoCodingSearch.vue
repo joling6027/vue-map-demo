@@ -72,13 +72,11 @@ export default {
 
       if (query === "") {
         if (this.latitude && this.longitude) {
-          // console.log(this.currentLocationId)
           query = `${this.latitude},${this.longitude}`;
         } else {
           return;
         }
       }
-      // console.log(query);
       try {
         const apiKey = import.meta.env.VITE_GOOGLE_MAP_API_KEY;
         const url = `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(

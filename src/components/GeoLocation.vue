@@ -6,13 +6,7 @@
     >
       Get Current Location <IconLocation/>
     </button>
-    <!-- <div class="flex items-center justify-center gap-x-3 mt-5">
       <p v-if="errorMessage && !location" class="text-red-500 mt-2">{{ errorMessage }}</p>
-      <p v-if="location" class="font-bold">Latitude: {{ location.latitude }}</p>
-      <p v-if="location" class="font-bold">
-        Longitude: {{ location.longitude }}
-      </p>
-    </div> -->
   </div>
 </template>
 
@@ -40,14 +34,12 @@ export default {
       }
     },
     handleSuccess(position) {
-      console.log(position);
       this.location = {
         currentLocationId: Date.now().toString(),
         latitude: position.coords.latitude,
         longitude: position.coords.longitude,
       };
       this.$emit("location-updated", this.location);
-      // console.log("this.location"+ JSON.stringify(this.location))
     },
     handleError(error) {
       switch (error.code) {

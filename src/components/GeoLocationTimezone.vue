@@ -4,7 +4,6 @@
       <h3 class="font-bold">TIMEZONE</h3>
       <p>{{ timeZone.timeZoneId }}</p>
       <p>{{ timeZone.timeZoneName }}</p>
-      <!-- <p>Raw Offset: {{ timeZone.rawOffset }}</p> -->
     </div>
     <div v-if="noresult" class="pr-3 border-r-2">
       <h3 class="font-bold">TIMEZONE</h3>
