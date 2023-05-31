@@ -3,6 +3,7 @@ import './assets/index.css'
 import { createApp } from 'vue'
 import VueGoogleMaps from '@fawmi/vue-google-maps'
 // import VueGoogleAutocomplete from "vue-google-autocomplete";
+import 'default-passive-events'
 import App from './App.vue'
 
 const app = createApp(App);

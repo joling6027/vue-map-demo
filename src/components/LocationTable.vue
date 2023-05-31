@@ -86,9 +86,6 @@ export default {
       const endIndex = startIndex + this.pageSize;
       return reversedLocations.slice(startIndex, endIndex);
     },
-    // areAllSelected() {
-    //   return this.paginatedLocations.every((location) => location.selected);
-    // },
   },
   methods: {
     deleteSelected() {
@@ -104,9 +101,12 @@ export default {
     },
     selectAll() {
       const startIndex = (this.currentPage - 1) * this.pageSize;
-      const endIndex = startIndex + this.pageSize;
+      const endIndex = Math.min(
+        startIndex + this.pageSize,
+        this.locations.length
+      );
       for (let i = startIndex; i < endIndex; i++) {
-        this.paginatedLocations[i].selected = true;
+        this.paginatedLocations[i - startIndex].selected = true;
       }
     },
   },

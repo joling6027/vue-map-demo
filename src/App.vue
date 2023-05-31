@@ -18,6 +18,7 @@ export default {
       markers: [],
       savedLocations: [],
       noresult: false,
+      currentLocationId: "",
     };
   },
   components: {
@@ -52,11 +53,20 @@ export default {
       //push the newMarker ID into the location object
       location.markerID = newMarker.id;
 
+      // change the no result boolean
+      this.noresult = false;
+      location.noresult = this.noresult;
+
       //save locations to display in the table
       this.savedLocations.push(location);
 
       // Save data to localStorage
       saveDataToLocalStorage(this.markers, this.savedLocations);
+    },
+    updateCurrentLocation(location) {
+      this.currentLocationId = location.currentLocationId
+      this.center.lat = location.latitude;
+      this.center.lng = location.longitude;
     },
     handleDeleteRecords(records) {
       for (const record of records) {
@@ -64,8 +74,10 @@ export default {
         if (index != -1) {
           this.savedLocations.splice(index, 1);
           const markerId = record.markerID;
-          const markerIndex = this.markers.findIndex((marker) => marker.id === markerId);
-          if (markerIndex !== -1 ) {
+          const markerIndex = this.markers.findIndex(
+            (marker) => marker.id === markerId
+          );
+          if (markerIndex !== -1) {
             this.markers.splice(markerIndex, 1);
           }
         }
@@ -73,7 +85,7 @@ export default {
       // Save data to localStorage
       saveDataToLocalStorage(this.markers, this.savedLocations);
     },
-    noRearchResult(result) {
+    noSearchResult(result) {
       this.noresult = result;
     },
   },
@@ -94,31 +106,41 @@ export default {
 
 <template>
   <div>
-<div class="flex flex-col items-center justify-center">
-    <GeoLocation @location-updated="updateLocation" />
-    <div class="flex w-[85%] h-48 items-center justify-center gap-x-5 mb-5">
-      <GeoCodingSearch @location-selected="updateLocation" @no-result="noRearchResult" :latitude="center.lat" :longitude="center.lng"/>
-      <GeoLocationTimezone :latitude="center.lat" :longitude="center.lng" :noresult="noresult"/>
-    </div>
-    <GMapMap
-      :key="center.lat"
-      :center="center"
-      :zoom="12"
-      map-type-id="terrain"
-      style="width: 100vw; height: 800px"
-    >
-      <GMapMarker
-        :key="marker.id"
-        v-for="marker in markers"
-        :position="marker.position"
+    <div class="flex flex-col items-center justify-center">
+      <GeoLocation @location-updated="updateCurrentLocation" />
+      <div class="flex w-[85%] h-32 items-center justify-center gap-x-5 mb-5">
+        <GeoCodingSearch
+          @location-selected="updateLocation"
+          @no-result="noSearchResult"
+          :currentLocationId="currentLocationId"
+          :latitude="center.lat"
+          :longitude="center.lng"
+        />
+        <GeoLocationTimezone
+          :latitude="center.lat"
+          :longitude="center.lng"
+          :noresult="noresult"
+        />
+      </div>
+      <GMapMap
+        :key="center.lat"
+        :center="center"
+        :zoom="12"
+        map-type-id="terrain"
+        style="width: 100vw; height: 800px"
+      >
+        <GMapMarker
+          :key="marker.id"
+          v-for="marker in markers"
+          :position="marker.position"
+        />
+      </GMapMap>
+      <LocationTable
+        :locations="savedLocations"
+        @delete-records="handleDeleteRecords"
       />
-    </GMapMap>
-    <LocationTable
-      :locations="savedLocations"
-      @delete-records="handleDeleteRecords"
-    />
-  </div>
-  <Footer />
+    </div>
+    <Footer />
   </div>
 </template>
 

@@ -23,7 +23,7 @@
         </p>
       </div>
       <div>
-        <h3 class="font-bold">LATITUDE & LONGITUDE</h3>
+        <h3 class="font-bold">COORDINATES</h3>
         <p v-for="result in searchResults" :key="result.place_id">
           <span>{{ result.geometry.location.lat }},</span><br />
           <span>{{ result.geometry.location.lng }}</span>
@@ -46,6 +46,7 @@ export default {
   props: {
     latitude: Number,
     longitude: Number,
+    currentLocationId: String,
   },
   data() {
     return {
@@ -56,56 +57,39 @@ export default {
       autocomplete: null,
     };
   },
-  // mounted() {
-  //   const script = document.createElement("script");
-  //   script.src = `https://maps.googleapis.com/maps/api/js?key=${import.meta.env.VITE_GOOGLE_MAP_API_KEY}&libraries=places`;
-  //   script.async = true;
-  //   script.defer = true;
-  //   script.onload = this.initializeGoogleMaps;
-  //   document.head.appendChild(script);
-  // },
+  watch: {
+  currentLocationId(newVal, oldVal) {
+    if (newVal !== oldVal) {
+      this.searchLocation();
+    }else {
+      return;
+    }
+  }
+},
   methods: {
-    // initializeGoogleMaps() {
-    //   // Initialize the Autocomplete service
-    //   const autocompleteService = new google.maps.places.AutocompleteService();
-
-    //   // Initialize the Autocomplete input element
-    //   const autocompleteInput = document.getElementById("autocomplete-input");
-    //   const autocomplete = new google.maps.places.Autocomplete(autocompleteInput);
-
-    //   // Listen for place selection event
-    //   autocomplete.addListener("place_changed", () => {
-    //     // Get the selected place from the Autocomplete input
-    //     const place = autocomplete.getPlace();
-
-    //     // Process the selected place data
-    //     if (place.geometry && place.geometry.location) {
-    //       const latitude = place.geometry.location.lat();
-    //       const longitude = place.geometry.location.lng();
-
-    //       // Do something with the latitude and longitude values
-    //       console.log("Selected Location:", latitude, longitude);
-    //     }
-    //   });
-    // },
     async searchLocation() {
-      // if (this.latitude && this.longitude) {
-      //   this.searchQuery = `${this.latitude},${this.longitude}`;
-      // }
-      if (this.searchQuery.trim() === "") {
-        return;
+      let query = this.searchQuery.trim();
+
+      if (query === "") {
+        if (this.latitude && this.longitude) {
+          // console.log(this.currentLocationId)
+          query = `${this.latitude},${this.longitude}`;
+        } else {
+          return;
+        }
       }
+      // console.log(query);
       try {
         const apiKey = import.meta.env.VITE_GOOGLE_MAP_API_KEY;
         const url = `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(
-          this.searchQuery
+          query
         )}&key=${apiKey}`;
 
         const response = await fetch(url);
         const data = await response.json();
 
         if (data.status === "OK") {
-          this.searchResults = [data.results[0]];;
+          this.searchResults = [data.results[0]];
           this.location = {
             address: this.searchResults[0].formatted_address,
             latitude: this.searchResults[0].geometry.location.lat,

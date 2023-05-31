@@ -6,13 +6,13 @@
     >
       Get Current Location <IconLocation/>
     </button>
-    <div class="flex items-center justify-center gap-x-3 mt-5">
+    <!-- <div class="flex items-center justify-center gap-x-3 mt-5">
       <p v-if="errorMessage && !location" class="text-red-500 mt-2">{{ errorMessage }}</p>
       <p v-if="location" class="font-bold">Latitude: {{ location.latitude }}</p>
       <p v-if="location" class="font-bold">
         Longitude: {{ location.longitude }}
       </p>
-    </div>
+    </div> -->
   </div>
 </template>
 
@@ -33,7 +33,7 @@ export default {
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(
           this.handleSuccess,
-          this.handleError
+          this.handleError,
         );
       } else {
         this.errorMessage = "Geolocation is not supported by your browser.";
@@ -42,11 +42,12 @@ export default {
     handleSuccess(position) {
       console.log(position);
       this.location = {
-        address: "Current Location",
+        currentLocationId: Date.now().toString(),
         latitude: position.coords.latitude,
         longitude: position.coords.longitude,
       };
       this.$emit("location-updated", this.location);
+      // console.log("this.location"+ JSON.stringify(this.location))
     },
     handleError(error) {
       switch (error.code) {
@@ -63,6 +64,7 @@ export default {
           this.errorMessage = "An unknown error occurred.";
           break;
       }
+      this.isFetchingLocation = false;
     },
   },
 };
