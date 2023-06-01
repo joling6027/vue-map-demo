@@ -1,7 +1,8 @@
 <template>
   <h2 class="font-bold text-xl my-6">SEARCH HISTORY</h2>
   <form @submit.prevent="" class="w-[80%] pb-24">
-    <table>
+    <div class="overflow-x-auto">
+    <table class="min-w-full">
       <thead>
         <tr>
           <th class="flex gap-x-2 justify-center">
@@ -40,6 +41,7 @@
         </tr>
       </tbody>
     </table>
+    </div>
     <Pagination
       :currentPage="currentPage"
       :totalPages="totalPages"
@@ -138,5 +140,11 @@ tbody td {
 .checkbox {
   width: 1.5rem;
   height: 1.5rem;
+}
+
+@media (max-width: 639px) {
+  table {
+    font-size: 14px;
+  }
 }
 </style>

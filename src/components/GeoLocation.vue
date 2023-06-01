@@ -2,11 +2,13 @@
   <div class="my-5 flex flex-col items-center justify-center">
     <button
       @click="getLocation"
-      class="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow flex"
+      class="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow flex sm:rounded-full sm:mb-24"
     >
-      Get Current Location <IconLocation/>
+      <span class="sm:hidden">Get Current Location</span><IconLocation />
     </button>
-      <p v-if="errorMessage && !location" class="text-red-500 mt-2">{{ errorMessage }}</p>
+    <p v-if="errorMessage && !location" class="text-red-500 mt-2">
+      {{ errorMessage }}
+    </p>
   </div>
 </template>
 
@@ -27,7 +29,7 @@ export default {
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(
           this.handleSuccess,
-          this.handleError,
+          this.handleError
         );
       } else {
         this.errorMessage = "Geolocation is not supported by your browser.";

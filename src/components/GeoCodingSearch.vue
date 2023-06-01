@@ -1,5 +1,5 @@
 <template>
-  <div class="flex">
+  <div class="flex justify-center items-center max-h-32 sm:flex-col sm:mb-5 sm:mt-24 box-border">
     <div class="mr-8 flex max-h-11">
       <input
         type="text"
@@ -15,22 +15,22 @@
         <IconSearch />
       </button>
     </div>
-    <div v-if="searchResults.length" class="flex gap-x-5 border-r-2 pr-3">
-      <div class="border-r-2 pr-3">
+    <div v-if="searchResults.length" class="flex gap-x-5 border-r-2 pr-3 overflow-y-auto xl:max-h-32 sm:max-h-24 sm:mt-4 sm:border-transparent sm:pr-0 sm:border-r-0 sm:h-24">
+      <div class="border-r-2 pr-3 basis-2/4 sm:w-1/2">
         <h3 class="font-bold">LAST SEARCH</h3>
         <p v-for="result in searchResults" :key="result.place_id">
           {{ result.formatted_address }}
         </p>
       </div>
-      <div>
+      <div class="basis-2/4 sm:w-1/2">
         <h3 class="font-bold">COORDINATES</h3>
-        <p v-for="result in searchResults" :key="result.place_id">
-          <span>{{ result.geometry.location.lat }},</span><br />
+        <p class="overflow-x-auto" v-for="result in searchResults" :key="result.place_id">
+          <span>{{ result.geometry.location.lat }},</span>
           <span>{{ result.geometry.location.lng }}</span>
         </p>
       </div>
     </div>
-    <div v-if="showNoResultsMessage" class="border-r-2 pr-3">
+    <div v-if="showNoResultsMessage" class="flex gap-x-5 border-r-2 pr-3 overflow-y-auto xl:max-h-32 sm:mt-4">
       <h3 class="font-bold">LAST SEARCH</h3>
       <p>No search results found.</p>
     </div>

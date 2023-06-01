@@ -109,7 +109,7 @@ export default {
   <div>
     <div class="flex flex-col items-center justify-center">
       <GeoLocation @location-updated="updateCurrentLocation" />
-      <div class="flex w-[85%] h-32 items-center justify-center gap-x-5 mb-5">
+      <div class="flex w-[85%] max-h-32 items-center justify-center gap-x-5 mb-5 sm:flex-col">
         <GeoCodingSearch
           @location-selected="updateLocation"
           @no-result="noSearchResult"
