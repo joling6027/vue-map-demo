@@ -1,20 +1,24 @@
 # Vue-Map
 
-This template should help get you started developing with Vue 3 in Vite.
-
-## Recommended IDE Setup
-
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur) + [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin).
-
-## Customize configuration
-
-See [Vite Configuration Reference](https://vitejs.dev/config/).
+Please check this [link](https://joling6027.github.io/vue-map-demo/) to see the demo.
 
 ## Project Setup
 
-```sh
-npm install
-```
+#### Please use your own Google API Key to run this project locally.
+1. Below APIs need to be enabled for this project:
+* Geocoding API
+* Maps JavaScript API
+* Time Zone API
+
+  See [https://developers.google.com/maps/documentation/javascript/get-api-key](https://developers.google.com/maps/documentation/javascript/get-api-key) for more information.
+
+2. After receiving your Google API Key, please clone this project to your local folder and add a .env.local file to the root.
+3. Add `VITE_GOOGLE_MAP_API_KEY=YOUR_API_KEY` to your .env.local file.
+4. Run below command to install dependencies.
+
+    ```sh
+    npm install
+    ```
 
 ### Compile and Hot-Reload for Development
 
@@ -27,3 +31,11 @@ npm run dev
 ```sh
 npm run build
 ```
+
+## Screenshots
+
+This section is to showcase the result in case the demo link is not available.
+![desktop view](https://github.com/joling6027/vue-map-demo/blob/master/src/assets/images/desktop_screen.png)
+![mobile view 1](https://github.com/joling6027/vue-map-demo/blob/master/src/assets/images/mobile_screen1.png)
+![mobile view 2](https://github.com/joling6027/vue-map-demo/blob/master/src/assets/images/mobile_screen2.png)
+![mobile view 3](https://github.com/joling6027/vue-map-demo/blob/master/src/assets/images/mobile_screen_search_history.png)
