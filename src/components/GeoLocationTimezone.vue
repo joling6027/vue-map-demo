@@ -1,6 +1,6 @@
 <template>
   <div class="flex gap-x-5 sm:mb-48">
-    <div v-if="timeZone && !noresult" class="pr-3 border-r-2 basis-2/4 sm:w-1/2">
+    <div v-if="timeZone && !noresult" class="border-r-2 pr-3 basis-2/4 sm:w-36">
       <h3 class="font-bold">TIMEZONE</h3>
       <p>{{ timeZone.timeZoneId }}</p>
       <p>{{ timeZone.timeZoneName }}</p>
@@ -9,7 +9,7 @@
       <h3 class="font-bold">TIMEZONE</h3>
       <p>-----</p>
     </div>
-    <div v-if="localTime && !noresult" class="basis-2/4 sm:w-1/2">
+    <div v-if="localTime && !noresult" class="pr-3 basis-2/4 sm:w-36">
       <h3 class="font-bold">LOCAL TIME</h3>
       <p>{{ formatDateTime(localTime) }}</p>
     </div>
